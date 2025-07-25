@@ -1,0 +1,1111 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;700&display=swap');
+
+/* Variabel CSS untuk warna dan styling */
+:root {
+    --pink-light: #FFC0CB;
+    --pink-medium: #FF69B4;
+    --purple-light: #E0BBE4;
+    --purple-medium: #957DAD;
+    --text-dark: #333;
+    --text-light: #FFF;
+    --bubble-bg: rgba(255, 255, 255, 0.3);
+    --bubble-border: rgba(255, 255, 255, 0.6);
+    --confetti-pink: #FFD1DC;
+    --confetti-purple: #E0BBE4;
+    --confetti-yellow: #FFFACD;
+
+    /* Variabel untuk efek transisi tema (akan diatur via JS) */
+    --circle-x: 50%;
+    --circle-y: 50%;
+    --new-theme-bg: #000000;
+}
+
+/* Reset CSS dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+    scroll-behavior: smooth;
+}
+
+/* Styling dasar untuk body */
+body {
+    background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 50px;
+    overflow-x: hidden;
+    position: relative; /* Penting untuk pseudo-element ::after dan overlay */
+
+    /* Transisi warna latar belakang dan teks saat tema berubah */
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* Base style untuk tema terang */
+body[data-theme="light"] {
+    background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+    color: var(--text-dark);
+}
+
+/* Base style untuk tema gelap */
+body[data-theme="dark"] {
+    background: linear-gradient(135deg, #222222, #444444); /* Contoh warna gelap */
+    color: var(--text-light);
+}
+
+/* Efek bulatan menyebar untuk transisi tema */
+body::after {
+    content: '';
+    position: absolute;
+    top: var(--circle-y, 50%); /* Posisi Y bulatan, bisa disesuaikan dengan posisi switch */
+    left: var(--circle-x, 50%); /* Posisi X bulatan, bisa disesuaikan dengan posisi switch */
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    background-color: var(--new-theme-bg, #000000); /* Warna bulatan, sesuaikan dengan tema baru */
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: transform 0.7s ease-out, opacity 0.7s ease-out, width 0s 0.7s, height 0s 0.7s; /* Transisi untuk bulatan */
+    z-index: 9999; /* Pastikan bulatan di atas konten */
+    pointer-events: none; /* Agar tidak menghalangi interaksi */
+}
+
+body.theme-transition::after {
+    transform: translate(-50%, -50%) scale(50); /* Memperbesar bulatan */
+    opacity: 1; /* Menampilkan bulatan */
+    width: 200vw; /* Ukuran yang cukup besar untuk menutupi layar */
+    height: 200vw; /* Ukuran yang cukup besar untuk menutupi layar */
+    transition: transform 0.7s ease-out, opacity 0.7s ease-out; /* Transisi untuk bulatan */
+}
+
+/* Mengontrol overflow body saat transisi tema aktif */
+body.theme-transition {
+    overflow: hidden; /* Hanya sembunyikan scroll saat transisi tema aktif */
+}
+
+
+/* Header Section */
+.header-section {
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Ini untuk bubble animation di dalam header, biarkan */
+    padding: 20px;
+}
+
+.header-content {
+    background: var(--bubble-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+    animation: slideDownFromTop 1s ease-out forwards;
+    /* Sentuhan animasi tambahan untuk header content */
+    transform-origin: center center; /* Pastikan rotasi dari tengah */
+    animation-delay: 0.5s; /* Delay setelah slideDownFromTop selesai */
+    animation: slideDownFromTop 1s ease-out forwards, headerWobble 4s infinite ease-in-out 1.5s; /* Gabung animasi */
+}
+
+.header-content h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3em;
+    color: var(--pink-medium);
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: var(--purple-medium);
+}
+
+/* Bubble Animation (Header) */
+.bubble-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    opacity: 0;
+    animation: bubbleFloat 15s infinite ease-in;
+}
+
+.bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; animation-duration: 12s; animation-delay: 0s;}
+.bubble:nth-child(2) { width: 60px; height: 60px; left: 30%; animation-duration: 15s; animation-delay: 2s;}
+.bubble:nth-child(3) { width: 30px; height: 30px; left: 50%; animation-duration: 10s; animation-delay: 4s;}
+.bubble:nth-child(4) { width: 70px; height: 70px; left: 70%; animation-duration: 18s; animation-delay: 6s;}
+.bubble:nth-child(5) { width: 50px; height: 50px; left: 90%; animation-duration: 13s; animation-delay: 8s;}
+
+/* Photo Gallery */
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.photo-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: calc(25% - 15px);
+    min-width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: slideUpFromBottom 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(50px);
+}
+/* Variasi animasi muncul photo card */
+.photo-card:nth-child(1) { animation-delay: 1.5s; }
+.photo-card:nth-child(2) { animation-delay: 1.7s; }
+.photo-card:nth-child(3) { animation-delay: 1.9s; }
+.photo-card:nth-child(4) { animation-delay: 2.1s; }
+.photo-card:nth-child(even) { /* Contoh variasi untuk kartu genap */
+    transform-origin: bottom left;
+}
+.photo-card:nth-child(odd) { /* Contoh variasi untuk kartu ganjil */
+    transform-origin: bottom right;
+}
+.photo-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+.photo-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display:block;
+    border-bottom: 5px solid var(--pink-medium);
+}
+
+.photo-card .chapter-content {
+    padding: 20px;
+}
+
+.photo-card h2.chapter-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8em;
+    color: var(--purple-medium);
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.photo-card p.chapter-description {
+    font-size: 0.9em;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+/* Cute Elements Container (fixed at bottom) */
+.cute-elements-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 100; /* Z-index ini harus lebih tinggi dari konten utama tapi lebih rendah dari pop-up aktif */
+}
+
+.cute-element {
+    background: var(--pink-medium);
+    color: var(--text-light);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: bounce 2s infinite ease-in-out;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Tambah transform transition */
+    position: relative;
+    z-index: 1; /* Pastikan tombol di dalam container punya z-index relatif */
+}
+
+.cute-element:hover {
+    background: var(--purple-medium);
+    transform: translateY(-5px) scale(1.05); /* Efek hover yang lebih jelas */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Specific delays for cute elements */
+.cute-element:first-child { /* Game button */
+    animation-delay: 0s;
+}
+.cute-element#calculatorElement { /* Calculator button */
+    animation-delay: 0.25s; /* Between game and envelope */
+}
+.cute-element:nth-child(3) { /* Envelope */
+    animation-delay: 0.5s;
+}
+.cute-element:nth-child(4) { /* Gift */
+    animation-delay: 1s;
+}
+
+
+/* Music Player Container */
+.music-player-container {
+    width: 80%;
+    max-width: 400px;
+    margin-top: 30px;
+    background: var(--bubble-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    aspect-ratio: 1/1;
+    animation: slideUpFromBottom 1s ease-out forwards;
+    animation-delay: 1s;
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.music-cover {
+    width: 70%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.music-info {
+    flex-grow: 0;
+    text-align: center;
+    min-width: 0;
+    margin-bottom: 5px;
+}
+
+.music-banner {
+    font-family: 'Pacifico', cursive;
+    color: var(--purple-medium);
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.music-artist {
+    font-size: 0.9em;
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+audio { width: 90%; margin: 0; }
+.music-controls button, .music-controls input[type="range"], .music-controls .volume-icon, .music-time, .progress-section, .time-display{
+    display:block;
+}
+.music-controls,.music-controls button,.music-controls input[type="range"]{
+    width:auto;height:auto;border-radius:0;background:none;color:initial;font-size:initial;
+}
+.music-time{margin:0;}
+.progress-section,.time-display{flex-direction:initial;flex-grow:initial;align-items:initial;}
+.music-player-container audio{display:block;margin:0 auto;width:90%;}
+
+#envelopeElement { width: 50px; height: 50px; font-size: 1.8em; }
+
+/* Particle Emitter (for clicks/events) */
+.particle-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 11;
+}
+
+.particle {
+    position: absolute;
+    background: linear-gradient(to bottom right, #FFD1DC, #FF69B4, #EE82EE);
+    border-radius: 50%;
+    opacity: 0;
+    animation: emitParticle 2s forwards ease-out;
+    filter: blur(0.5px);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.particle.type-star {
+    background: #FFF;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+/* Mini Letter Overlay */
+.mini-letter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Z-index yang konsisten untuk semua overlay */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    pointer-events: none; /* Default: tidak bisa diklik saat tidak aktif */
+}
+
+.mini-letter-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Aktifkan klik saat overlay aktif */
+}
+
+.mini-letter-card {
+    background: #fefcfb;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    width: 90%;
+    height: 450px; /* Fixed height for consistent size across pages as requested */
+    text-align: center;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px), linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+    background-size: 20px 20px, 20px 20px;
+    background-position: 40px 0, 0px 0px;
+    padding-left: 60px;
+    padding-right: 30px;
+    line-height: 24px;
+    font-size: 1.1em;
+    overflow: hidden; /* Crucial for multi-page */
+    border: 2px solid #aaa;
+    display: flex; /* Use flexbox for vertical centering of pages */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mini-letter-overlay.active .mini-letter-card {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.mini-letter-card .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5em;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1000;
+}
+
+.mini-letter-card .close-btn:hover {
+    color: #555;
+}
+
+/* Multi-page specific styles (Mini Letter) */
+.mini-letter-pages {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    transition: transform 0.5s ease-in-out;
+    padding: 0 10px;
+}
+
+.mini-letter-page {
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0px;
+    box-sizing: border-box;
+}
+
+.mini-letter-page:not(.active) {
+    display: none;
+}
+
+.mini-letter-card h3.page-title {
+    font-family: 'Pacifico', cursive;
+    color: var(--pink-medium);
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+    margin-left: 0;
+    padding-top: 0;
+}
+
+.mini-letter-card p.page-text {
+    font-size: 1em;
+    color: var(--text-dark);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.mini-letter-card p.page-text-small {
+    font-size: 1em;
+    color: var(--text-dark);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Navigation Buttons (Mini Letter) */
+.nav-button {
+    position: absolute;
+    bottom: 20px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    color: var(--pink-medium);
+    border: none;
+    cursor: pointer;
+    box-shadow: none;
+    transition: transform 0.2s ease, color 0.3s ease;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    padding: 0;
+}
+
+.nav-button:hover {
+    color: var(--purple-medium);
+    transform: scale(1.1);
+}
+
+.nav-button.prev-button {
+    right: 60px;
+}
+
+.nav-button.next-button {
+    right: 20px;
+}
+
+/* Cute elements container for page 2 - centered below text */
+.cute-elements-page2 {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    pointer-events: none;
+    margin-top: 10px;
+    min-height: 150px;
+}
+
+.cute-elements-page2 .cute-icon-item {
+    display: inline-block;
+    color: var(--purple-medium);
+    opacity: 0.7;
+    font-size: 2em;
+    animation: subtleScaleRotate 8s infinite ease-in-out forwards;
+    --start-scale: 1;
+    --start-rot: 0deg;
+    --mid-scale: 1;
+    --mid-rot: 0deg;
+    --end-scale: 1;
+    --end-rot: 0deg;
+}
+
+/* Pagination Dots (Mini Letter) */
+.pagination-dots {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.dot.active {
+    background: var(--pink-medium);
+}
+
+/* Game Overlay styles */
+.game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Z-index tinggi agar di atas elemen lain */
+    opacity: 0; /* Mulai tidak terlihat */
+    visibility: hidden; /* Sembunyikan dari interaksi dan layout */
+    transition: opacity 0.4s ease, visibility 0.4s ease; /* Transisi untuk overlay itu sendiri */
+    pointer-events: none; /* Default: tidak bisa diklik saat tidak aktif */
+}
+
+/* Aturan untuk menampilkan overlay game saat aktif */
+.game-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Aktifkan klik saat overlay aktif */
+}
+
+.game-modal {
+    background: #fefcfb;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 500px;
+    width: 90%;
+    height: 500px; /* Fixed height for game modal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Important to clip falling hearts/bombs */
+    transform: scale(0.8); /* Mulai lebih kecil */
+    opacity: 0; /* Mulai tidak terlihat */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Transisi untuk modal itu sendiri */
+}
+
+/* Aturan untuk menganimasikan modal game saat overlay aktif */
+.game-overlay.active .game-modal {
+    transform: scale(1); /* Membesar ke ukuran normal */
+    opacity: 1; /* Tampil penuh */
+}
+
+
+.game-title {
+    font-family: 'Pacifico', cursive;
+    color: var(--pink-medium);
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.game-stats {
+    font-size: 1.1em;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+.game-area {
+    width: calc(100% - 20px);
+    height: calc(100% - 150px); /* Adjusted for title, stats, and buttons */
+    border: 1px solid #ccc;
+    background-color: #e0f2f7; /* Light blue background for sky */
+    position: relative;
+    overflow: hidden; /* Crucial for clipping falling items and clouds */
+    margin-bottom: 10px;
+    border-radius: 10px; /* Slightly rounded corners for game area */
+}
+
+/* Clouds for game background */
+.cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+    animation: moveClouds linear infinite;
+    z-index: 1;
+    width: 50px;
+    height: 30px;
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.cloud-1 { width: 80px; height: 30px; top: 20%; left: -20%; animation-duration: 30s; }
+.cloud-1::before { width: 40px; height: 40px; top: -15px; left: 10px; }
+.cloud-1::after { width: 60px; height: 35px; top: -5px; left: -10px; }
+
+.cloud-2 { width: 100px; height: 40px; top: 50%; left: -50%; animation-duration: 40s; }
+.cloud-2::before { width: 60px; height: 50px; top: -25px; left: 15px; }
+.cloud-2::after { width: 80px; height: 45px; top: -15px; left: -15px; }
+
+.cloud-3 { width: 60px; height: 25px; top: 80%; left: -80%; animation-duration: 35s; }
+.cloud-3::before { width: 35px; height: 35px; top: -10px; left: 5px; }
+.cloud-3::after { width: 50px; height: 30px; top: 0px; left: -5px; }
+
+.game-item { /* Base style for hearts and bombs */
+    position: absolute;
+    width: 60px; /* Larger hitbox */
+    height: 60px; /* Larger hitbox */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em; /* Larger icon size */
+    cursor: pointer;
+    user-select: none;
+    z-index: 2;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.game-item.heart {
+    color: var(--pink-medium);
+}
+
+.game-item.bomb {
+    color: #333;
+}
+
+.game-over-message {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1em;
+    color: var(--text-dark);
+    margin: 15px 0;
+    text-align: center;
+}
+
+.restart-game-btn {
+    background: var(--pink-medium);
+    color: var(--text-light);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.restart-game-btn:hover {
+    background: var(--purple-medium);
+    transform: scale(1.05);
+}
+
+.close-game-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5em;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+.close-game-btn:hover {
+    color: #555;
+}
+
+/* --- Age Calculator Modal Styles --- */
+/* Overlay untuk kalkulator umur */
+#ageCalculatorOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex; /* Default ke flex agar kontennya terpusat */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Z-index tinggi agar di atas elemen lain */
+    opacity: 0; /* Mulai dengan opacity 0 untuk transisi fade */
+    visibility: hidden; /* Sembunyikan sepenuhnya dari interaksi dan layout */
+    transition: opacity 0.4s ease, visibility 0.4s ease; /* Transisi untuk overlay itu sendiri */
+    pointer-events: none; /* Default: tidak bisa diklik saat tidak aktif */
+}
+
+/* Aturan untuk menampilkan overlay kalkulator saat kelas 'active' ditambahkan oleh JS */
+#ageCalculatorOverlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Aktifkan klik saat overlay aktif */
+}
+
+.age-calculator-modal {
+    background: #fefcfb;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 450px;
+    width: 90%;
+    height: auto; /* Responsive height based on content */
+    min-height: 400px; /* Minimum height to look consistent */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    /* Efek scale untuk modal itu sendiri saat muncul */
+    transform: scale(0.8); /* Mulai lebih kecil */
+    opacity: 0; /* Mulai dengan opacity 0 untuk transisi */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Aturan untuk menampilkan modal kalkulator saat overlay aktif */
+#ageCalculatorOverlay.active .age-calculator-modal {
+    transform: scale(1); /* Membesar ke ukuran normal */
+    opacity: 1; /* Tampil penuh */
+}
+
+.calc-title {
+    font-family: 'Pacifico', cursive;
+    color: var(--pink-medium);
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.calc-section {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.calc-section h4 {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1em;
+    color: var(--purple-medium);
+    margin-bottom: 10px;
+}
+
+.date-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.date-select {
+    padding: 8px 10px;
+    border: 1px solid var(--purple-light);
+    border-radius: 8px; /* Rounded corners for select boxes */
+    background-color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1em;
+    color: var(--text-dark);
+    flex-grow: 1; /* Allow select boxes to grow */
+    max-width: 120px; /* Limit max width */
+    cursor: pointer;
+    -webkit-appearance: none; /* Remove default arrow on Chrome/Safari */
+    -moz-appearance: none; /* Remove default arrow on Firefox */
+    appearance: none; /* Remove default arrow */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cpath%20fill%3D%22%23957DAD%22%20d%3D%22M208%2096H48l80%2080z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 8px top 50%;
+    background-size: 12px;
+}
+
+.date-select:focus {
+    outline: none;
+    border-color: var(--pink-medium);
+    box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.3);
+}
+
+.calc-button {
+    background: var(--pink-medium);
+    color: var(--text-light);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1em;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.calc-button:hover {
+    background: var(--purple-medium);
+    transform: scale(1.05);
+}
+
+.age-result {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.2em;
+    color: var(--text-dark);
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.close-age-calculator-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5em;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+.close-age-calculator-btn:hover {
+    color: #555;
+}
+
+/* --- Gift Pop-up Specific Styles --- */
+#giftQuestionSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Agar bagian ini mengisi tinggi card */
+    width: 100%;
+}
+
+.gift-question-text {
+    font-family: 'Pacifico', cursive;
+    font-size: 2em;
+    color: var(--pink-medium);
+    margin-bottom: 30px; /* Tambah margin bawah karena teks kecil dihapus */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.gift-buttons-container {
+    display: flex;
+    justify-content: space-between; /* Untuk sejajar kiri dan kanan */
+    align-items: center; /* Posisikan tombol di tengah secara vertikal */
+    width: 80%; /* Berikan lebar agar ada ruang untuk space-between */
+    max-width: 300px; /* Batasi lebar container tombol */
+    position: relative; /* Penting untuk posisi absolut tombol "GA" jika bergerak */
+    min-height: 80px; /* Beri ruang agar tombol bisa bergerak */
+    padding: 0 10px; /* Sedikit padding agar tidak terlalu mepet tepi */
+}
+
+.gift-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 50px; /* Bentuk pil */
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease, left 0.2s ease-out, top 0.2s ease-out; /* Tambah transisi untuk left/top */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    white-space: nowrap; /* Pastikan teks tidak pecah */
+    /* Posisi awal flexbox. Jika JavaScript akan memindahkannya, akan diubah menjadi absolute sementara */
+}
+
+.gift-button.red-button {
+    background: #ff4d4d; /* Merah */
+    color: var(--text-light);
+}
+.gift-button.red-button:hover {
+    background: #ff3333;
+    transform: scale(1.05);
+}
+
+.gift-button.green-button {
+    background: #4CAF50; /* Hijau */
+    color: var(--text-light);
+}
+.gift-button.green-button:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+#giftContentSection {
+    /* Style untuk konten kado yang awalnya tersembunyi */
+    flex-direction: column; /* Sesuaikan dengan display: flex di parent */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%; /* Pastikan mengisi tinggi card */
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Transisi saat muncul */
+}
+
+#giftContentSection h3 {
+    font-family: 'Pacifico', cursive;
+    color: var(--pink-medium);
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+#giftContentSection p {
+    font-size: 1em;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+
+/* --- Keyframes --- */
+@keyframes fadeInScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes popUp { 0% { transform: translateY(20px) scale(0.5); opacity: 0; } 80% { transform: translateY(-5px) scale(1.05); opacity: 1; } 100% { transform: translateY(0) scale(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bubbleFloat { 0% { transform: translateY(100vh) translateX(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100vh) translateX(50px); opacity: 0; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes slideDownFromTop { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUpFromBottom { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes emitParticle { 0% { transform: scale(0) translateY(0); opacity: 1; } 20% { opacity: 1; } 100% { transform: scale(1.2) translateY(-150px) translateX(var(--rand-x)); opacity: 0; } }
+@keyframes confettiFall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(500px) rotate(720deg); opacity: 0; } }
+@keyframes cursorHeart { 0% { transform: scale(0) rotate(0deg); opacity: 1; } 100% { transform: scale(1.5) rotate(180deg); opacity: 0; } }
+@keyframes moveClouds { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+@keyframes subtleScaleRotate {
+    0% { transform: scale(var(--start-scale, 1)) rotate(var(--start-rot, 0deg)); opacity: 0.7; }
+    50% { transform: scale(var(--mid-scale, 1.05)) rotate(var(--mid-rot, 5deg)); opacity: 0.8; }
+    100% { transform: scale(var(--end-scale, 1)) rotate(var(--end-rot, 0deg)); opacity: 0.7; }
+}
+/* Keyframe tambahan untuk header content wobble */
+@keyframes headerWobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(0.5deg); }
+    75% { transform: rotate(-0.5deg); }
+}
+
+
+/* Cursor Particles */
+.cursor-particle {
+    position: fixed;
+    pointer-events: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    animation: cursorHeart 0.8s forwards;
+    z-index: 9999;
+}
+
+.cursor-particle.sparkle {
+    background-color: transparent;
+    box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.8);
+    transform: rotate(45deg);
+    border-radius: 2px;
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: confettiFall 1.5s forwards;
+    z-index: 9999;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 1024px) {
+    .photo-card { width: calc(50% - 15px); }
+    .header-content h1 { font-size: 2.5em; }
+    .header-content p { font-size: 1.1em; }
+    .music-cover { width: 80%; height: auto; }
+}
+
+@media (max-width: 768px) {
+    .photo-card { width: 100%; min-width: 280px; }
+    .header-content { padding: 25px 30px; }
+    .header-content h1 { font-size: 2em; }
+    .header-content p { font-size: 1em; }
+    .cute-elements-container { gap: 10px; }
+    .cute-element { width: 45px; height: 45px; font-size: 1.5em; }
+    #envelopeElement { width: 45px; height: 45px; font-size: 1.5em; }
+    .music-cover { width: 70%; height: auto; }
+    .mini-letter-card { padding-left: 30px; padding-right: 20px; height: 380px; }
+    .nav-button { width: 30px; height: 30px; font-size: 1.6em; }
+    .nav-button.prev-button { right: 50px; }
+    .nav-button.next-button { right: 10px; }
+    .pagination-dots { bottom: 5px; }
+
+    .game-modal { width: 95%; height: 450px; }
+    .game-item { width: 50px; height: 50px; font-size: 2.5em; }
+
+    /* Media Queries for Calculator on small screens */
+    .age-calculator-modal {
+        min-height: 350px;
+    }
+    .date-inputs {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .date-select {
+        max-width: none; /* Allow full width on small screens */
+        width: 100%;
+    }
+
+    /* Gift Button Responsive Adjustments */
+    .gift-button {
+        padding: 10px 20px; /* Slightly smaller padding */
+        font-size: 1em; /* Smaller font size */
+        border-radius: 40px; /* Keep pill shape */
+    }
+    /* PENTING: Saat di mobile, pastikan tombol GA dan Maauuuuu punya ruang cukup */
+    .gift-buttons-container {
+        flex-direction: column; /* Ubah ke kolom pada layar kecil */
+        gap: 10px; /* Kurangi jarak */
+        position: static; /* Hapus posisi relatif untuk fleksibilitas flexbox */
+        min-height: auto; /* Hapus min-height jika flex-direction: column */
+    }
+    .gift-button.red-button, .gift-button.green-button {
+        position: static; /* Biarkan flexbox yang mengatur posisi */
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none; /* Hapus transform yang diatur oleh JS pada posisi statis */
+        width: 80%; /* Berikan lebar agar lebih mudah diklik */
+        margin: 0 auto; /* Tengahkann jika flex-direction: column */
+    }
+}

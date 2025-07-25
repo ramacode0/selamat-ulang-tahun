@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Sayangkuu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="cursor-trail-container"></div>
+    <div class="header-section">
+        <div class="bubble-animation">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+        <div class="header-content">
+            <h1>Selamat Ulang Tahun Sayangkuu 🎉</h1>
+            <p>Di hari spesialmu ini, aku pengen kamu tau betapa beruntungnya aku punya kamu. Kamu itu definisi sempurna, apalagi kalo lagi senyum. Semoga hari ini dan seterusnya penuh kebahagiaan ya, my love! ❤️</p>
+        </div>
+    </div>
+
+    <div class="music-player-container">
+        <img src="https://i.scdn.co/image/ab67616d0000b2734978596b32fde00ce5c4d07d" alt="Pasilyo Album Cover" class="music-cover">
+        <div class="music-info">
+            <div class="music-banner">Pasilyo</div>
+            <div class="music-artist">SunKissed Lola</div>
+        </div>
+        <audio id="backgroundMusic" loop autoplay controls>
+            <source src="https://files.catbox.moe/fy5tff.mp3" type="audio/mp3">
+            Browser kamu nggak support audio player.</audio>
+    </div>
+
+    <div class="photo-gallery">
+        <div class="photo-card">
+            <img src="https://files.catbox.moe/c6ijeq.jpg" alt="Foto Cantik">
+            <div class="chapter-content">
+                <h2 class="chapter-title">CANTIK</h2>
+                <p class="chapter-description">Definisi "cantik" itu ya kamu. Tiap liat kamu, auto mikir, 'gila ini bidadari nyasar apa gimana sih?'. Aura kamu itu loh bikin silau ✨</p>
+            </div>
+        </div>
+        <div class="photo-card">
+            <img src="https://files.catbox.moe/m9uhan.jpg" alt="Foto Pintar">
+            <div class="chapter-content">
+                <h2 class="chapter-title">PINTAR</h2>
+                <p class="chapter-description">Otak kamu itu kayak ensiklopedia berjalan, deh. Pinter banget, bikin aku ngerasa cupu cupu kadang. Tapi itu yang bikin kamu makin gemoy dan aku makin banggaa 😎</p>
+            </div>
+        </div>
+        <div class="photo-card">
+            <img src="https://files.catbox.moe/haarv7.jpg" alt="Foto Penyabar">
+            <div class="chapter-content">
+                <h2 class="chapter-title">PENYABAR</h2>
+                <p class="chapter-description">Kesabaran kamu itu di luar nalar, sumpah. Ngadepin aku yang kadang random atau ngeselin aja bisa sabar banget. Kamu malaikat tak bersayap bub 😘</p>
+            </div>
+        </div>
+        <div class="photo-card">
+            <img src="https://files.catbox.moe/fqcclu.jpg" alt="Foto Pendek">
+            <div class="chapter-content">
+                <h2 class="chapter-title">PENDEK</h2>
+                <p class="chapter-description">Ini bukan kekurangan, ini fitur spesial! Tinggi segini tuh pas banget buat dipeluk, disenderin dan di pukpuk pokoknya gemes pol! Bikin aku makin sayang parah 🤗</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mini-letter-overlay" id="miniLetterOverlay">
+        <div class="mini-letter-card">
+            <i class="fas fa-times close-btn" onclick="closeMiniLetter()"></i>
+
+            <div class="mini-letter-pages">
+                <div class="mini-letter-page active" id="page1">
+                    <h3 class="page-title">HAI LOVE</h3>
+                    <p class="page-text">tekan tombol panah ya buat pindah ke halaman selanjutnya</p>
+                </div>
+
+                <div class="mini-letter-page" id="page2">
+                    <p class="page-text-small">ciee yang lagi ultah nihhh</p>
+                    <div class="cute-elements-page2">
+                    </div>
+                </div>
+
+                <div class="mini-letter-page" id="page3">
+                    <p class="page-text-small">Maaf ya aku gabisa seromantis dan se peka cowo lain, tapi intinya aku sayangg banget sama kamuu, janji tetep terus sama aku yaaa bentar lagi kan kamu kuliahh nihh, semangatt yaaa</p>
+                </div>
+
+                <div class="mini-letter-page" id="page4">
+                    <h3 class="page-title">Doa Untukmu</h3>
+                    <p class="page-text">Sayangku, di hari spesialmu ini, aku cuma bisa panjatkan doa terbaik. Semoga kamu selalu diberikan kesehatan, kebahagiaan, dan semua impianmu bisa tercapai. Jangan pernah berhenti jadi kamu yang selalu bikin aku jatuh cinta setiap hari. Love you!</p>
+                </div>
+            </div>
+
+            <div class="pagination-dots"></div>
+            <button class="nav-button prev-button" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-button next-button" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div class="mini-letter-overlay" id="giftLetterOverlay">
+        <div class="mini-letter-card" id="giftCard"> <i class="fas fa-times close-btn" onclick="closeGiftLetter()"></i>
+
+            <div id="giftQuestionSection">
+                <h3 class="gift-question-text">Mau kado nggaa?</h3>
+                <div class="gift-buttons-container">
+                    <button id="noGiftBtn" class="gift-button red-button">GA</button>
+                    <button id="yesGiftBtn" class="gift-button green-button">Maauuuuu</button>
+                </div>
+            </div>
+
+            <div id="giftContentSection" style="display: none;">
+                <h3>Kadonya dari Aku</h3>
+                <p>kadonya nyusul ya sayang, kuharap kamu jangan berharap lebih tentang seberapa mewah isinya yaa, maaf belum bisa jadi yang terbaik buat kamu, hehehe loveyou more!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cute-elements-container">
+        <div class="cute-element" id="gameElement">
+            <i class="fas fa-gamepad"></i>
+        </div>
+        <div class="cute-element" id="calculatorElement">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <div class="cute-element" id="envelopeElement">
+            <i class="fas fa-envelope"></i>
+            <div class="particle-container" id="particleContainer"></div>
+        </div>
+        <div class="cute-element" id="giftElement">
+            <i class="fas fa-gift"></i>
+        </div>
+    </div>
+
+    <div id="gameOverlay" class="game-overlay">
+        <div class="game-modal">
+            <i class="fas fa-times close-game-btn" id="closeGameBtn"></i>
+            <h3 class="game-title">Tangkap Hati!</h3>
+            <div class="game-stats">
+                <span id="gameScoreDisplay">Skor: 0</span> |
+                <span id="gameLivesDisplay">Nyawa: ❤️❤️❤️</span>
+            </div>
+            <div id="gameArea" class="game-area">
+                <div class="cloud cloud-1"></div>
+                <div class="cloud cloud-2"></div>
+                <div class="cloud cloud-3"></div>
+            </div>
+            <div id="gameOverMessage" class="game-over-message" style="display: none;">
+                yahh... kamu kalah ya??
+                gapapa sayang kamu boleh kalah digame ini tapi kamu tetep pemenang di hati akuuu &gt;.&lt;
+            </div>
+            <button id="restartGameBtn" class="restart-game-btn" style="display: none;">Mulai Lagi</button>
+        </div>
+    </div>
+
+    <div id="ageCalculatorOverlay" class="game-overlay">
+        <div class="age-calculator-modal">
+            <i class="fas fa-times close-age-calculator-btn" id="closeAgeCalculatorBtn"></i>
+            <h3 class="calc-title">Kalkulator Umur</h3>
+
+            <div class="calc-section">
+                <h4>Tanggal Lahir:</h4>
+                <div class="date-inputs">
+                    <select id="birthDay" class="date-select"></select>
+                    <select id="birthMonth" class="date-select"></select>
+                    <select id="birthYear" class="date-select"></select>
+                </div>
+            </div>
+
+            <div class="calc-section">
+                <h4>Tanggal Sekarang:</h4>
+                <div class="date-inputs">
+                    <select id="currentDay" class="date-select"></select>
+                    <select id="currentMonth" class="date-select"></select>
+                    <select id="currentYear" class="date-select"></select>
+                </div>
+            </div>
+
+            <button id="calculateAgeBtn" class="calc-button">Hitung Umur</button>
+            <div id="ageResult" class="age-result"></div>
+        </div>
+    </div>
+
+    <audio id="heartSound" src="https://files.catbox.moe/18xdfv.mp3" preload="auto"></audio>
+    <audio id="bombSound" src="https://files.catbox.moe/wf2ihc.mp3" preload="auto"></audio>
+    <audio id="noGiftSound" src="https://files.catbox.moe/klnr7n.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
